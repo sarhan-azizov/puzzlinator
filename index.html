@@ -1,150 +1,22 @@
-<script>
-    // https://gist.github.com/xanf/9e11a5faf618a018737a9efd252746da
-    const puzzles = [
-        {
-            id: 1,
-            edges: {
-                top: null,
-                right: { edgeTypeId: 7, type: "outside" },
-                bottom: { edgeTypeId: 5, type: "inside" },
-                left: null,
-            },
-        },
-        {
-            id: 9,
-            edges: {
-                top: { edgeTypeId: 8, type: "inside" },
-                right: { edgeTypeId: 15, type: "inside" },
-                bottom: null,
-                left: { edgeTypeId: 5, type: "outside" },
-            },
-        },
-        {
-            id: 5,
-            edges: {
-                top: null,
-                right: { edgeTypeId: 2, type: "inside" },
-                bottom: { edgeTypeId: 1, type: "inside" },
-                left: null,
-            },
-        },
-        {
-            id: 4,
-            edges: {
-                top: { edgeTypeId: 34, type: "inside" },
-                right: { edgeTypeId: 11, type: "outside" },
-                bottom: { edgeTypeId: 7, type: "inside" },
-                left: null,
-            },
-        },
-        {
-            id: 3,
-            edges: {
-                top: { edgeTypeId: 2, type: "outside" },
-                right: null,
-                bottom: { edgeTypeId: 4, type: "outside" },
-                left: { edgeTypeId: 6, type: "inside" },
-            },
-        },
-        {
-            id: 2,
-            edges: {
-                top: { edgeTypeId: 3, type: "outside" },
-                right: { edgeTypeId: 34, type: "outside" },
-                bottom: null,
-                left: null,
-            },
-        },
-        {
-            id: 8,
-            edges: {
-                top: null,
-                right: { edgeTypeId: 15, type: "outside" },
-                bottom: { edgeTypeId: 4, type: "inside" },
-                left: null,
-            },
-        },
-        {
-            id: 7,
-            edges: {
-                top: { edgeTypeId: 3, type: "inside" },
-                right: null,
-                bottom: { edgeTypeId: 1, type: "outside" },
-                left: { edgeTypeId: 10, type: "inside" },
-            },
-        },
-        {
-            id: 6,
-            edges: {
-                top: { edgeTypeId: 11, type: "inside" },
-                right: { edgeTypeId: 10, type: "outside" },
-                bottom: { edgeTypeId: 6, type: "outside" },
-                left: { edgeTypeId: 8, type: "outside" },
-            },
-        },
-    ];
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Puzzlinator" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <title>Puzzlinator</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class= "solution">
+        <div class="loading">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
 
-    let findNextPuzzle = (puzzles, currentPuzzle, count) => {
-        let nextPuzzle = null;
-        let targetPazzleId = currentPuzzle.id;
-        const size = Math.sqrt(puzzles.length);
-
-        if (count % size === 0) {
-            nextPuzzle = puzzles[count/3 - 1].edges.bottom.edgeTypeId;
-            targetPazzleId = puzzles[count/3 - 1].id;
-        } else {
-            nextPuzzle = currentPuzzle.edges.right.edgeTypeId;
-        }
-
-        return puzzles.find((puzzle) => {
-            if (puzzle.id !== targetPazzleId) {
-                return Object.entries(puzzle.edges)
-                    .find((edge) => edge[1] && (edge[1].edgeTypeId === nextPuzzle));
-            }
-        });
-    }
-
-    const turnPuzzle = (puzzle, nextPuzzle) => {
-        if (nextPuzzle.edges.left && puzzle.edges.right && puzzle.edges.right.edgeTypeId === nextPuzzle.edges.left.edgeTypeId) {
-            return nextPuzzle;
-        }
-
-        if (nextPuzzle.edges.top && puzzle.edges.bottom && puzzle.edges.bottom.edgeTypeId === nextPuzzle.edges.top.edgeTypeId) {
-            return nextPuzzle;
-        }
-
-        nextPuzzle.edges = Object.keys(nextPuzzle.edges).reduce((result, key, idx, keys) => {
-            const nextKey = keys[idx+1] ? keys[idx+1] : keys[0];
-            return {...result, [key]: nextPuzzle.edges[nextKey] };
-        }, {})
-
-        return turnPuzzle(puzzle, nextPuzzle);
-    }
-
-    function solvePuzzles(puzzles) {
-        const result = [];
-        (function findPuzzles(puzzle){
-            result.push(puzzle);
-
-            if (puzzles.length =т == result.length) {
-                return;
-            }
-
-            const nextPuzzle = findNextPuzzle(puzzles, puzzle, result.length);
-            let tPuzzle = puzzle;
-            const size = Math.sqrt(puzzles.length);
-
-            if (result.length % size === 0) {
-                tPuzzle = puzzles[result.length/3 - 1];
-            }
-
-            const turnedPuzzle = turnPuzzle(tPuzzle, nextPuzzle);
-
-            findPuzzles(turnedPuzzle);
-        })(puzzles[0])
-
-        return result;
-    }
-
-    console.log(solvePuzzles(puzzles))
-</script>
+    <script src="solution.js"></script>
+    <script defer async src="index.js"></script>
+  </body>
+</html>
